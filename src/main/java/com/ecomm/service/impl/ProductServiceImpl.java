@@ -29,6 +29,7 @@ public class ProductServiceImpl implements ProductService {
         product.setDescription(productRequestDto.getDescription());
         product.setPrice(productRequestDto.getPrice());
         product.setStockQuantity(productRequestDto.getStockQuantity());
+        product.setCategory(category);
         Product saveProduct = productRepository.save(product);
         ProductResponseDto productResponseDto = convertToDto(saveProduct);
         return productResponseDto;
@@ -58,12 +59,20 @@ public class ProductServiceImpl implements ProductService {
         return productResponseDto;
     }
 
+public String deleteProduct(String productId){
+    Product product = productRepository.findById(productId)
+            .orElseThrow(() -> new RuntimeException("Produce not found"));
+    productRepository.delete(product);
+    return "Product" + productId + " deleted successfully ";
+    }
+
     private ProductResponseDto convertToDto(Product product){
         ProductResponseDto productResponseDto = new ProductResponseDto();
         productResponseDto.setProductId(product.getProductId());
         productResponseDto.setName(product.getName());
         productResponseDto.setDescription(product.getDescription());
         productResponseDto.setInStock(product.getInStock());
+        productResponseDto.setPrice(product.getPrice());
         productResponseDto.setStockQuantity(product.getStockQuantity());
         productResponseDto.setCategoryName(product.getCategory().getName());
         return productResponseDto;

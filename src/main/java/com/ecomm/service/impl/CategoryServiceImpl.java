@@ -54,11 +54,20 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public CategoryResponseDto updateCategory(String categoryId, CategoryRequestDto categoryRequestDto) {
-        return null;
+        Category category = categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new RuntimeException("Category not found"));
+        category.setName(categoryRequestDto.getName());
+        category.setDescription(categoryRequestDto.getDescription());
+        Category updateCategory = categoryRepository.save(category);
+        return CategoryMapping.toCategoryResponseDto(updateCategory);
     }
 
     @Override
-    public void deleteCategory(String categoryId) {
+    public String deleteCategory(String categoryId) {
+        Category category = categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new RuntimeException("Category not found"));
+        categoryRepository.delete(category);
+        return "Category" + categoryId + " deleted successfully";
     }
 
     private ExtendedCategoryResponseDto convertToExtendCategoryResponseDto(Category category){

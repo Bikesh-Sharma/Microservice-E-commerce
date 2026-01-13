@@ -33,4 +33,14 @@ public class CategoryController {
     public ExtendedCategoryResponseDto getCategoryById(@PathVariable String categoryId){
         return categoryService.getCategoryById(categoryId);
     }
+
+    @PutMapping("/{categoryId}/update")
+    public CategoryResponseDto updateCategory(@PathVariable String categoryId,@RequestBody CategoryRequestDto categoryRequestDto){
+        return categoryService.updateCategory(categoryId,categoryRequestDto);
+    }
+
+    @DeleteMapping("/{categoryId}")
+    public String deleteCategory(@PathVariable String categoryId){
+        return categoryService.deleteCategory(categoryId);
+    }
 }
