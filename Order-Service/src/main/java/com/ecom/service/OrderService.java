@@ -69,7 +69,7 @@ public class OrderService {
     }
 
     public List<OrderResponseDto> getOrderByCustomerId(String customerId){
-        List<Order> orders = orderRepository.findbyCustomerId(customerId);
+        List<Order> orders = orderRepository.findByCustomerId(customerId);
         List<OrderResponseDto> responseList = new ArrayList<>();
 
         for (Order order : orders){
