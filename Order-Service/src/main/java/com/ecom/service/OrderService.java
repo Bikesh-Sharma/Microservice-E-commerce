@@ -1,7 +1,7 @@
 package com.ecom.service;
 
 import com.ecom.dto.*;
-import com.ecom.entity.Order;
+import com.ecom.entity.Orders;
 import com.ecom.entity.OrderItem;
 import com.ecom.repository.OrderItemRepository;
 import com.ecom.repository.OrderRepository;
@@ -35,7 +35,7 @@ public class OrderService {
         for (OrderItemRequest itemRequest : orderRequestDto.getItems()){
             ProductResponseDto productName = productClient.getProductName(itemRequest.getProductId());
             //validate the product
-            if (productName.getStockQuantity()<itemRequest.getQuantity()){
+            if (productName.getStockQuantity() < itemRequest.getQuantity()) {
                 throw new RuntimeException("insufficient stock for product : " + productName.getName());
             }
             //update stock
@@ -49,7 +49,7 @@ public class OrderService {
             orderItems.add(orderItem);
         }
 
-        Order order = new Order(orderId,orderRequestDto.getCustomerId(),
+        Orders order = new Orders(orderId,orderRequestDto.getCustomerId(),
                 LocalDateTime.now(),totalAmount,OrderStatus.PENDING);
 
         orderRepository.save(order);
@@ -60,24 +60,32 @@ public class OrderService {
     }
 
     public OrderResponseDto getOrderById(String orderId){
-        Order order = orderRepository.findById(orderId)
+        Orders order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new RuntimeException("Order not found with id : " + orderId));
 
-        List<OrderItem> items = orderRepository.findByOrderId(orderId);
+        List<OrderItem> items = orderItemRepository.findByOrderId(orderId);
         return new OrderResponseDto(order.getOrderId(),order.getCustomerId(),order.getOrderDate(),
                 order.getTotalAmount(),order.getStatus(),items);
     }
 
     public List<OrderResponseDto> getOrderByCustomerId(String customerId){
-        List<Order> orders = orderRepository.findByCustomerId(customerId);
+        List<Orders> orders = orderRepository.findByCustomerId(customerId);
         List<OrderResponseDto> responseList = new ArrayList<>();
 
-        for (Order order : orders){
+        for (Orders order : orders){
             List<OrderItem> items=orderItemRepository.findByOrderId(order.getOrderId());
             responseList.add(new OrderResponseDto(order.getOrderId(),order.getCustomerId(),
                     order.getOrderDate(),order.getTotalAmount(),order.getStatus(),items));
         }
         return responseList;
+    }
+
+    public void updateOrderStatus(String orderId,OrderStatus orderStatus){
+        Orders order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new RuntimeException("Order not found with orderId : " + orderId));
+
+        order.setStatus(orderStatus);
+        orderRepository.save(order);
     }
 
     private String generateOrderId(){

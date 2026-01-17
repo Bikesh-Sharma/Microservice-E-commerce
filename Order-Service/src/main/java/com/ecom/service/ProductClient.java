@@ -14,12 +14,12 @@ public class ProductClient {
     }
 
     public ProductResponseDto getProductName(String productId){
-        String url = "http://localhost:8081/products" + productId;
+        String url = "http://localhost:8081/products/" + productId;
         return restTemplate.getForObject(url,ProductResponseDto.class);
     }
 
     public void updateStock(String productId,int quantity){
-        String url="http://localhost:8081/products" + productId + "/stock?stockQuantity=" + quantity;
+        String url="http://localhost:8081/products/" + productId + "/stock?stockQuantity=" + quantity;
         restTemplate.patchForObject(url,null,Void.class);
     }
 }

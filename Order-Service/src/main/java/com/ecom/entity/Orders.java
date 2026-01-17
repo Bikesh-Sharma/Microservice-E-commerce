@@ -1,9 +1,7 @@
 package com.ecom.entity;
 
 import com.ecom.dto.OrderStatus;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,12 +15,13 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "orders")
-public class Order {
+public class Orders {
 
     @Id
     private String orderId;
     private String customerId;
     private LocalDateTime orderDate;
     private Double totalAmount;
+    @Enumerated(EnumType.STRING)
     private OrderStatus status;
 }

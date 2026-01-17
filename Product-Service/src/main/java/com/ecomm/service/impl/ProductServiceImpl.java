@@ -49,17 +49,42 @@ public class ProductServiceImpl implements ProductService {
                 .stream().map(this::convertToDto).toList();
     }
 
+   // @Override
+//    public ProductResponseDto updateProduct(String productId, Integer stockQuantity){
+//        Product product = productRepository.findById(productId)
+//                .orElseThrow(() -> new RuntimeException("Product not found"));
+//        product.setStockQuantity(stockQuantity);
+//        productRepository.save(product);
+//        ProductResponseDto productResponseDto = convertToDto(product);
+//        return productResponseDto;
+//    }
+
     @Override
-    public ProductResponseDto updateProduct(String productId, Integer stockQuantity){
+    public ProductResponseDto updateProduct(String productId, Integer quantityToReduce) {
+
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new RuntimeException("Product not found"));
-        product.setStockQuantity(stockQuantity);
+
+        int currentStock = product.getStockQuantity();
+
+        int updatedStock = currentStock + quantityToReduce;
+        // quantityToReduce is NEGATIVE (-2)
+
+        if (updatedStock < 0) {
+            throw new RuntimeException("Insufficient stock for product : " + product.getName());
+        }
+
+        product.setStockQuantity(updatedStock);
+
+        product.setInStock(updatedStock > 0);
+
         productRepository.save(product);
-        ProductResponseDto productResponseDto = convertToDto(product);
-        return productResponseDto;
+
+        return convertToDto(product);
     }
 
-public String deleteProduct(String productId){
+
+    public String deleteProduct(String productId){
     Product product = productRepository.findById(productId)
             .orElseThrow(() -> new RuntimeException("Produce not found"));
     productRepository.delete(product);
