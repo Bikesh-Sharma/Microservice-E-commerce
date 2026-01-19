@@ -27,6 +27,9 @@ public class FindHighestSalaryDepartmentWise {
                                 .limit(3).toList()
                 )
         ));
-        System.out.println(result);
+//        System.out.println(result);
+
+        Employee employee = list.stream().max(Comparator.comparing(Employee::getSalary)).orElseThrow();
+        System.out.println(employee);
     }
 }
