@@ -7,11 +7,11 @@
 		<artifactId>Microservice-Ecommerce</artifactId>
 		<version>1.0.0</version>
 	</parent>
-	<groupId>com.ecomm</groupId>
-	<artifactId>Product-Service</artifactId>
+	<groupId>com.ecom</groupId>
+	<artifactId>Payment-Service</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>Product-Service</name>
-	<description>E-commerce project in microservice  Spring Boot</description>
+	<name>Payment-Service</name>
+	<description>Payment Service project in Spring Boot</description>
 	<url/>
 	<licenses>
 		<license/>
@@ -29,37 +29,43 @@
 		<java.version>17</java.version>
 	</properties>
 	<dependencies>
-
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
 
 		<dependency>
+			<groupId>org.apache.httpcomponents.client5</groupId>
+			<artifactId>httpclient5</artifactId>
+		</dependency>
+
+		<!-- JPA -->
+		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
 		</dependency>
 
+		<!-- H2 -->
 		<dependency>
 			<groupId>com.h2database</groupId>
 			<artifactId>h2</artifactId>
 			<scope>runtime</scope>
 		</dependency>
 
+		<!-- LOMBOK -->
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
 			<optional>true</optional>
 		</dependency>
 
+		<!-- TEST -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
-
 	</dependencies>
-
 
 	<build>
 		<plugins>

@@ -1,0 +1,38 @@
+server:
+  port: 5000
+
+spring:
+  application:
+    name: api-gateway
+
+  cloud:
+    gateway:
+      server:
+        webflux:
+          routes:
+
+            # ================= PRODUCT SERVICE =================
+            - id: product-service-route
+              uri: http://localhost:8081
+              predicates:
+                - Path=/api/v1/products/**,/api/v1/category/**
+              filters:
+                - RewritePath=/api/v1/(?<segment>.*),/${segment}
+                - name: CircuitBreaker
+                  args:
+                    name: productServiceCircuitBreaker
+                    fallbackUri: forward:/fallback/product
+
+            # ================= ORDER SERVICE =================
+            - id: order-service-route
+              uri: http://localhost:8082
+              predicates:
+                - Path=/api/v1/orders/**
+              filters:
+                - RewritePath=/api/v1/orders(?<segment>/?.*),/orders${segment}
+
+            # ================= PAYMENT SERVICE =================
+            - id: payment-service-route
+              uri: http://localhost:8083
+              predicates:
+                - Path=/api/v1/payments/**

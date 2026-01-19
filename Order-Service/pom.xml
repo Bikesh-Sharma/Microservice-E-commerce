@@ -13,7 +13,7 @@
 		<version>1.0.0</version>
 	</parent>
 
-	<artifactId>order-service</artifactId>
+	<artifactId>Order-Service</artifactId>
 	<name>Order-Service</name>
 
 	<properties>
