@@ -1,4 +1,4 @@
-package com.ecom;
+package com.ecom.controller;
 
 import com.ecom.dto.PaymentRequestDto;
 import com.ecom.dto.PaymentResponseDto;
