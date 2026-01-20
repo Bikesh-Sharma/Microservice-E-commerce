@@ -23,6 +23,7 @@
         <module>Order-Service</module>
         <module>Payment-Service</module>
         <module>ApiGateway-Service</module>
+        <module>Discovery-Server</module>
     </modules>
 
     <!-- Spring Cloud version CENTRAL -->

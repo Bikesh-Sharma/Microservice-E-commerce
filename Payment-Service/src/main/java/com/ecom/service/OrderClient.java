@@ -10,12 +10,13 @@ public class OrderClient {
 
     private final RestTemplate restTemplate;
 
-    public OrderClient(RestTemplateBuilder builder) {
-        this.restTemplate = builder.build();
+    public OrderClient(RestTemplate restTemplate) {
+        this.restTemplate = restTemplate;
     }
 
+
     public void updateOrderStatus(String orderId,String staus){
-        String url = "http://localhost:8082/orders/" + orderId + "/status?status=" + staus;
+        String url = "http://ORDER-SERVICE/orders/" + orderId + "/status?status=" + staus;
         OrderStatusRequestDto request = new OrderStatusRequestDto(orderId,staus);
         String response = restTemplate.patchForObject(url, request, String.class);
         System.out.println("Order status update : " + response);

@@ -11,4 +11,14 @@ public class FallbackController {
     public ResponseEntity<String> fallbackProduct(){
         return ResponseEntity.ok("Product service is currently unavailable. Please try again letter !! ");
     }
+
+    @GetMapping("/fallback/order")
+    public String orderFallback() {
+        return "Order service is down. Please try later.";
+    }
+
+    @GetMapping("/fallback/payment")
+    public String paymentFallback() {
+        return "Payment service is down. Please try later.";
+    }
 }

@@ -9,30 +9,51 @@ spring:
     gateway:
       server:
         webflux:
+
+          discovery:
+            locator:
+              enabled: true
+              lower-case-service-id: true
+
           routes:
 
             # ================= PRODUCT SERVICE =================
             - id: product-service-route
-              uri: http://localhost:8081
+              uri: lb://PRODUCT-SERVICE
               predicates:
-                - Path=/api/v1/products/**,/api/v1/category/**
+                - Path=/api/v1/products,/api/v1/products/**,/api/v1/category,/api/v1/category/**
               filters:
                 - RewritePath=/api/v1/(?<segment>.*),/${segment}
                 - name: CircuitBreaker
                   args:
-                    name: productServiceCircuitBreaker
+                    name: productServiceCB
                     fallbackUri: forward:/fallback/product
 
             # ================= ORDER SERVICE =================
             - id: order-service-route
-              uri: http://localhost:8082
+              uri: lb://ORDER-SERVICE
               predicates:
-                - Path=/api/v1/orders/**
+                - Path=/api/v1/orders,/api/v1/orders/**
               filters:
-                - RewritePath=/api/v1/orders(?<segment>/?.*),/orders${segment}
+                - RewritePath=/api/v1/(?<segment>.*),/${segment}
+                - name: CircuitBreaker
+                  args:
+                    name: orderServiceCB
+                    fallbackUri: forward:/fallback/order
 
             # ================= PAYMENT SERVICE =================
             - id: payment-service-route
-              uri: http://localhost:8083
+              uri: lb://PAYMENT-SERVICE
               predicates:
-                - Path=/api/v1/payments/**
+                - Path=/api/v1/payments,/api/v1/payments/**
+              filters:
+                - RewritePath=/api/v1/(?<segment>.*),/${segment}
+                - name: CircuitBreaker
+                  args:
+                    name: paymentServiceCB
+                    fallbackUri: forward:/fallback/payment
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
