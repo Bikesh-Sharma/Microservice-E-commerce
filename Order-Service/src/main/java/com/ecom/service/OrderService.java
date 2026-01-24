@@ -3,9 +3,11 @@ package com.ecom.service;
 import com.ecom.dto.*;
 import com.ecom.entity.Orders;
 import com.ecom.entity.OrderItem;
+import com.ecom.events.OrderCreateEvents;
 import com.ecom.repository.OrderItemRepository;
 import com.ecom.repository.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -23,6 +25,13 @@ public class OrderService {
 
     @Autowired
     private ProductClient productClient;
+
+    private final KafkaTemplate<String, OrderCreateEvents> kafkaTemplate;
+
+    public OrderService(KafkaTemplate<String, OrderCreateEvents> kafkaTemplate) {
+        this.kafkaTemplate = kafkaTemplate;
+    }
+
 
     public OrderResponseDto placeOrder(OrderRequestDto orderRequestDto){
 
@@ -54,6 +63,8 @@ public class OrderService {
 
         orderRepository.save(order);
         orderItemRepository.saveAll(orderItems);
+        //kafka events
+        placeOrder(order);
 
         return new OrderResponseDto(order.getOrderId(),order.getCustomerId(),
                 order.getOrderDate(),order.getTotalAmount(),order.getStatus(),orderItems);
@@ -86,6 +97,16 @@ public class OrderService {
 
         order.setStatus(orderStatus);
         orderRepository.save(order);
+    }
+
+    public void placeOrder(Orders order){
+        OrderCreateEvents events = new OrderCreateEvents(
+                order.getOrderId(),
+                order.getCustomerId(),
+                String.valueOf(order.getTotalAmount())
+        );
+        kafkaTemplate.send("order-events", events);
+
     }
 
     private String generateOrderId(){
