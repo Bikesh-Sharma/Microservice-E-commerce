@@ -1,13 +1,18 @@
 package com.ecom.utility;
 
-public interface FunctionalProgramming {
-    public void s1(){
+import java.lang.annotation.Annotation;
 
-    }
+ interface FunctionalProgramming {
+    public void s1();
+}
+    class B implements FunctionalProgramming{
 
-    public default void s2(){
 
-    }
+        @Override
+        public void s1() {
+
+        }
+
     public static void main(String[] args) {
 
 
