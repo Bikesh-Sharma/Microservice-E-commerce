@@ -100,13 +100,17 @@ public class OrderService {
     }
 
     public void placeOrder(Orders order){
-        OrderCreateEvents events = new OrderCreateEvents(
-                order.getOrderId(),
-                order.getCustomerId(),
-                String.valueOf(order.getTotalAmount())
-        );
-        kafkaTemplate.send("order-events", events);
-
+        try {
+            OrderCreateEvents events = new OrderCreateEvents(
+                    order.getOrderId(),
+                    order.getCustomerId(),
+                    String.valueOf(order.getTotalAmount())
+            );
+            kafkaTemplate.send("order-events", events);
+        } catch (Exception e) {
+            // IMPORTANT: Kafka failure should NOT break order creation
+            System.out.println("Kafka is down, skipping event publish");
+        }
     }
 
     private String generateOrderId(){

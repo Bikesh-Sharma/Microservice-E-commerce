@@ -5,6 +5,12 @@
 
     <modelVersion>4.0.0</modelVersion>
 
+
+    <properties>
+        <spring.config.additional-location>
+            file:./config/
+        </spring.config.additional-location>
+    </properties>
     <!-- Spring Boot version ONLY HERE -->
     <parent>
         <groupId>org.springframework.boot</groupId>
